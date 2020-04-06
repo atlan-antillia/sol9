@@ -1,0 +1,149 @@
+/******************************************************************************
+ *
+ * Copyright (c) 1999-2012 Antillia.com TOSHIYUKI ARAI. ALL RIGHTS RESERVED.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions, and the following disclaimer.
+ *  
+ * 2. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR 
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *
+ *  RadioBox.h
+ *
+ *****************************************************************************/
+
+// SOL++2000
+// 2000.02.18
+// 2012/06/25
+
+#pragma once
+
+#include <sol\RowColumn.h>
+#include <sol\GroupBox.h>
+#include <sol\RadioButton.h>
+#include <sol\ClientDC.h>
+
+
+namespace SOL {
+
+class RadioBox :public RowColumn {
+private:
+  int        num;
+  GroupBox*     frame;
+    RadioButton** radiob;
+  int    width;
+  int    height;
+
+public:
+  RadioBox(): RowColumn() { }
+
+public:
+  //2012/06/25
+  RadioBox(View* parent, const TCHAR* name, Args& args)
+  :RowColumn()
+  {
+    create(parent, name, args);
+  }
+
+public:
+  ~RadioBox()
+  {
+    for(int i = 0; i<num; i++) {
+      delete radiob[i];
+    }
+  }
+
+
+public:
+  virtual Boolean create(View* parent, const TCHAR* name, Args& args)
+  {
+    Boolean rc = True;
+
+    View::setParent(parent);
+
+    num = (int) args.get(XmNitemCount);
+    char** items = (char**)args.get(XmNitems);
+    radiob = new RadioButton*[num];
+    Args ar;
+    frame = new GroupBox(parent, name, ar);
+    for(int i = 0; i<num; i++) {
+      ar.reset();
+      if(i == 0) {
+        ar.set(XmNstyle, (LONG_PTR)WS_GROUP);
+      }
+      radiob[i] = new RadioButton(parent, items[i], ar);
+    }
+
+    return rc;
+  }
+
+public:
+  void reshape(int x, int y, int width, int height)
+  {
+    View* parent = getParent();
+    ClientDC cdc(parent);
+    char*  label = "A";
+    Size size;
+    cdc.getTextExtent(label, strlen(label), &size);
+    int  ch = size.cy*3/2;
+
+    frame -> reshape(x, y, width, ch*(num+2));
+    for(int i = 0; i<num; i++) {
+      radiob[i]->reshape(x+ch, y+ch*(i+1), width-2*ch, ch);
+    }
+  }
+
+public:
+  int  getCheck()
+  {
+    int pos = -1;
+    for (int i = 0; i < num; i++) {
+      if(radiob[i] -> getCheck() == TRUE) {
+        pos = i;
+        break;
+      }
+    }
+    return pos;
+  }
+
+public:
+  void setCheck(int pos)
+  {
+    for(int i = 0; i < num; i++) {
+      radiob[i] -> setCheck(FALSE);
+    }
+    if(pos >= 0 && pos < num) {
+      radiob[pos] -> setCheck(TRUE);
+    }
+  }
+
+
+/*  RadioBox(View* parent, const char* name, Args& args);
+//  ~RadioBox();
+
+//  virtual Boolean create(View* parent, const char* name, Args& args);
+
+  void   reshape(int x, int y, int width, int height);
+  int    getCheck();
+  void  setCheck(int pos);
+  */
+};
+
+}
+
+
