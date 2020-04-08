@@ -33,12 +33,7 @@ td.left a:visited { color: #003344 ; background: #ddeeff}
 td {
   word-wrap:break-word;
 }
-@media (max-width: 480px) {
-  img{
-    max-width: 95%;
-    height: auto;
-  }
-}
+
 pre {
   white-space: -moz-pre-wrap;
   white-space: -pre-wrap;
