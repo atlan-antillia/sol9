@@ -33,13 +33,14 @@ td.left a:visited { color: #003344 ; background: #ddeeff}
 td {
   word-wrap:break-word;
 }
- 
+<!--
 @media (max-width: 480px) {
   img{
     max-width: 95%;
     height: auto;
   }
 }
+-->
 pre {
   white-space: -moz-pre-wrap;
   white-space: -pre-wrap;
@@ -114,17 +115,6 @@ COLOR="#ffffff" SIZE="-1">&nbsp;&nbsp;SOL9 C++ Class Library 2.1
 <!-- Top anchors begin -->
 
 <table border="0"  cellspacing="4"><tr>
-
-<td class="left">
-&nbsp;
-<a href=".http://www.antillia.com/sol9.2.0/index.html">
-<font size =2 color="navy">
-<b> Home</b>
-</font>
-</a>
-&nbsp;
-</td>
-
 <td class="left">
 &nbsp;
 <a href="http://www.antillia.com/sol9.2.0/samples.html">
